@@ -5,6 +5,10 @@ const validator = require("validator")
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
     required: true,
@@ -13,14 +17,44 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true
+  },
+  profileimg: {
+    type: String
+  },
+  coverphoto: {
+    type: String 
+  },
+  highestqualification: {
+    type: String
+  },
+  Resume: {
+    type: String
+  },
+  Coverletter: {
+    type: String
+  },
+  gender: {
+    type: String
+  },
+  socials: {
+    type: [String]
+  },
+  skills: {
+    type: [String]
+  },
+  languages: {
+    type: [String]
+  },
+  bio: {
+    type: String
   }
 })
 
-// static signup method 
-userSchema.statics.signup= async function(email, password){
+// static user signup method 
+userSchema.statics.signup= async function(name ,email, password ){
 
     //valoidation
-    if(!email || !password){
+    if(!email || !password || !name){
         throw Error("all fields must be filled")
     }
     if(!validator.isEmail(email)){
@@ -39,12 +73,12 @@ userSchema.statics.signup= async function(email, password){
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password,salt)
 
-    const user = await this.create({email,password: hash}) //can also use save
+    const user = await this.create({email,password: hash ,name}) //can also use save
 
     return user
 }
 
-// statuc login method 
+// static user login method 
 userSchema.statics.login =async function(email,password){
       //validation
     if(!email || !password){
